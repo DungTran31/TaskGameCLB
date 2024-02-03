@@ -14,7 +14,7 @@ public class BulletController : MonoBehaviour
     [SerializeField] private float lifeTime = 3f;
 
     private Rigidbody2D rb;
-
+    private DissolveEnemy dissolveEnemy;
     private void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -38,7 +38,7 @@ public class BulletController : MonoBehaviour
         {
             Debug.Log("Enemy hit");
             //Destroy(gameObject);
-            collision.gameObject.SetActive(false);
+          
             this.gameObject.SetActive(false);
         }
     }

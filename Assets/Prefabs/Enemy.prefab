@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2433660795894995368}
   - component: {fileID: 4776714498771621070}
   - component: {fileID: 6252238965986825649}
+  - component: {fileID: 1928455810373769770}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -55,7 +56,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 563e370c118304e4b8403cd587f4f984, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -99,6 +100,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43388e703b175e74a89130d176ebea60, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effect: {fileID: 0}
+  health: 0
+  target: {fileID: 0}
   speed: 3
   rotateSpeed: 0.0025
 --- !u!50 &4776714498771621070
@@ -163,3 +167,16 @@ CircleCollider2D:
   m_Offset: {x: 0, y: 0}
   serializedVersion: 2
   m_Radius: 0.5
+--- !u!114 &1928455810373769770
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2376785178554963837}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5df96eb72ce7c241b604c897e8d5368, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isDissolving: 0
