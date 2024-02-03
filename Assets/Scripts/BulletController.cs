@@ -1,30 +1,45 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class BulletController : MonoBehaviour
 {
 
-    [SerializeField] private GameObject _player;
-    private float _speed = 5f;
-    private Vector2 _diretion;
-    void Start()
+    [SerializeField] private float damage;
+
+    [Range(1, 10)]
+    [SerializeField] private float speed = 10f;
+
+    [Range(1, 10)]
+    [SerializeField] private float lifeTime = 3f;
+
+    private Rigidbody2D rb;
+
+    private void Start()
     {
-        _player = GameObject.FindWithTag("Player");
-        
-        Vector2 mousePosi = _player.GetComponent<PlayerController>().GetMousePosition();
-        
-        Debug.Log(mousePosi);
-        
-        // _diretion = mousePosi - (Vector2)Camera.main.ScreenToWorldPoint(_player.transform.position);
-        _diretion = mousePosi - (Vector2)_player.transform.position;
-        
-        _diretion.Normalize();
+        rb = GetComponent<Rigidbody2D>();
+        StartCoroutine(ReturnToPoolAfterDelay());
     }
 
-    // Update is called once per frame
-    void Update()
+    private IEnumerator ReturnToPoolAfterDelay()
     {
-        transform.Translate(_diretion * Time.deltaTime*_speed);
+        yield return new WaitForSeconds(lifeTime);
+        gameObject.SetActive(false);
+    }
+
+    private void FixedUpdate()
+    {
+        rb.velocity = transform.up * speed;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.tag == "Enemy")
+        {
+            Debug.Log("Enemy hit");
+            //Destroy(gameObject);
+            collision.gameObject.SetActive(false);
+            this.gameObject.SetActive(false);
+        }
     }
 }

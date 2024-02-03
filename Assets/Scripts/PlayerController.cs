@@ -6,15 +6,19 @@ using UnityEngine.PlayerLoop;
 
 public class PlayerController : MonoBehaviour
 {
+
     private float _horizontalInput, _verticalInput;
     private float _speed = 8f;
     private Vector2 _mousePosi;
+
+    [SerializeField] private Transform _firingPoint; // Thêm một trường Transform để tham chiếu đến firing point
+
 
     [SerializeField] private GameObject _bulletPrefab;
     private ObjectPooler _objectPooler; // Thêm một reference tới ObjectPooler
     private Camera _mainCamera; // Thêm một reference tới Camera
 
-
+    [SerializeField] private float _orbitRadius = 2f;
     private void Start()
     {
         _objectPooler = ObjectPooler.Instance; // Lấy reference của ObjectPooler từ singleton
@@ -25,21 +29,25 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        //Mỗi khi nhấn chuột trái
+        // Lấy hướng từ player đến chuột
+        _mousePosi = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
+        Vector2 direction = _mousePosi - (Vector2)transform.position;
+        direction.Normalize();
+
+        // Tính góc giữa player và chuột
+        float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg - 90f;
+
+        // Xoay FiringPoint theo góc tính được
+        _firingPoint.rotation = Quaternion.Euler(0, 0, angle);
+
+        // Đặt vị trí của FiringPoint trên đường tròn quanh player
+        Vector2 orbitPosition = (Vector2)transform.position + (direction.normalized * _orbitRadius);
+        _firingPoint.position = orbitPosition;
+        // Kiểm tra khi nhấn chuột trái
         if (Input.GetMouseButtonDown(0))
         {
-            //Input.mousePosition: trả về vị trí của chuột trong Screen Space
-            //ScreenToWorldPoint: chuyển tọa độ từ Screen Space sang World Space
-            _mousePosi = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
-            
-            //Bắn ra 1 viên đạn
-            //Instantiate(_bulletPrefab, transform.position, transform.rotation);
             // Lấy đạn từ pool
-            GameObject bullet = _objectPooler.SpawnFromPool("Bullet", transform.position, Quaternion.identity);
-
-            // Thiết lập vị trí và hướng cho viên đạn
-            bullet.transform.position = transform.position;
-
+            GameObject bullet = _objectPooler.SpawnFromPool("Bullet", _firingPoint.position, _firingPoint.rotation);
         }
     }
 
@@ -57,55 +65,5 @@ public class PlayerController : MonoBehaviour
         direction.Normalize();
         
         transform.Translate(direction * Time.deltaTime * _speed);
-    }
-    
-    
-    
-    public void Movement1()
-    {
-        if (Input.GetKeyDown(KeyCode.RightArrow))
-        {
-            //player di chuyen sang bên phải 1 đoạn 4 đơn vị
-            transform.Translate(new Vector2(4f, 0f));
-        }
-        else if (Input.GetKeyDown(KeyCode.LeftArrow))
-        {
-            
-            transform.Translate(new Vector2(-4f, 0f));
-        }
-        else if (Input.GetKeyDown(KeyCode.UpArrow))
-        {
-            transform.Translate(new Vector2(0f, 3f));
-        }
-        else if (Input.GetKeyDown(KeyCode.DownArrow))
-        {
-            transform.Translate(new Vector2(0f, -3f));
-        }
-    }
-
-    public void Movement2()
-    {
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            //player di chuyen sang bên phải 1 đoạn 4 đơn vị
-            transform.Translate(new Vector2(4f, 0f) * Time.deltaTime);
-        
-        }
-        else if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            
-            transform.Translate(new Vector2(-4f, 0f) * Time.deltaTime);
-            
-        }
-        
-        if (Input.GetKey(KeyCode.UpArrow))
-        {
-            transform.Translate(new Vector2(0f, 3f) * Time.deltaTime);
-        
-        }
-        else if (Input.GetKey(KeyCode.DownArrow))
-        {
-            transform.Translate(new Vector2(0f, -3f) * Time.deltaTime);
-        }
     }
 }
